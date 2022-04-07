@@ -1,13 +1,12 @@
-name: 'tuva'
+name: 'readmissions_lean_input_on_hcup_in_our_snowflake'
 version: '0.1.5'
 config-version: 2
-
-profile:                # configuration required (your profile to connect dbt to your data warehouse)
+profile: readmissions_lean_input_on_hcup_in_our_snowflake   # configuration required
 
 vars:
-    source_name:        # configuration required (name of your source dataset e.g. cms_claims)
-    source_database:    # configuration required (name of the database where your data is stored)
-    source_schema:      # configuration required (name of the schema where you created staging tables)
+    source_name: hcup        # configuration required
+    source_database: hcup    # configuration required
+    source_schema: staging       # configuration required
 
     src_patient: "{{ source(var('source_name'),'stg_patient') }}"
     src_encounter: "{{ source(var('source_name'),'stg_encounter') }}"
@@ -26,13 +25,18 @@ clean-targets:
     - "dbt_modules"
 
 models:
-  tuva:
-    +database:          # configuration required (should be the same as source database)
-    +schema: tuva
+  readmissions_lean_input_on_hcup_in_our_snowflake:
+    +database: hcup
+    +schema: readmissions_lean_input
 
 seeds:
-  tuva:
-    +database:          # configuration required (should be the same as source database)
-    +schema: vocabulary
-    +tags: vocabulary
-    
+  readmissions_lean_input_on_hcup_in_our_snowflake:
+    +database: hcup
+    +schema: terminology
+    +tags: terminology
+    +quote_columns: false
+    discharge_status_code:
+      +column_types: {discharge_status_code: varchar(8)}
+    ms_drg:
+      +column_types: {ms_drg: varchar(8)}
+
